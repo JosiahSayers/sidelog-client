@@ -1,0 +1,32 @@
+{
+  "name": "sidelog-client",
+  "version": "1.0.0",
+  "description": "JS client for sidelog",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc && cp README.md package.json dist/",
+    "local-build": "npm run build && cd dist && npm pack && cd .."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JosiahSayers/sidelog-client.git"
+  },
+  "keywords": [
+    "logging",
+    "logger"
+  ],
+  "author": "Josiah Sayers <josiah.sayers15@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JosiahSayers/sidelog-client/issues"
+  },
+  "homepage": "https://github.com/JosiahSayers/sidelog-client#readme",
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "axios": "^1.3.4"
+  }
+}
