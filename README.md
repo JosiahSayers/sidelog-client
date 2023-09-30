@@ -64,9 +64,10 @@ As soon as possible within your application you should call the `setConfig` meth
 import logger from 'sidelog-client';
 
 logger.setConfig({
-  sidelogUrl: "https://sidelog.your-website.com", // Just the base URL of the API, do not include any endpoints
+  sidelogUrl: "https://sidelog.your-website.com", // Base URL of the API
   clientId: 'xxxxxxxxxxxxx', // client ID you set up in sidelog API
-  logToConsole: true, // Defaults to false. If true, logs will be sent to sidelog and the console
+  logToConsole: true, // Defaults to false. If true, logs will be sent to the console
+  logToApi: false, // Defaults to true. If true, logs will be sent to sidelog
 });
 ```
 
