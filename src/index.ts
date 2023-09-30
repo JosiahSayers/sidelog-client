@@ -4,6 +4,7 @@ export interface SidelogConfig {
   sidelogUrl: string;
   clientId: string;
   logToConsole?: boolean;
+  logToApi?: boolean;
 }
 
 export type SidelogLogLevel = typeof LOG_LEVELS[number];
@@ -31,32 +32,34 @@ const log = async (message: string, level: SidelogLogLevel, meta?: Record<string
     console[level](message, json);
   }
 
-  try {
-    await axios({
-      url: `${config.sidelogUrl}/logs`,
-      headers: {
-        'content-type': 'application/json',
-        'clientId': config.clientId
-      },
-      method: 'post',
-      data: {
-        message,
-        level,
-        json
-      },
-    });
+  if (config.logToApi) {
+    try {
+      await axios({
+        url: `${config.sidelogUrl}/logs`,
+        headers: {
+          'content-type': 'application/json',
+          'clientId': config.clientId
+        },
+        method: 'post',
+        data: {
+          message,
+          level,
+          json
+        },
+      });
 
-    return { success: true };
-  } catch (e) {
-    if (e instanceof AxiosError && e.response) {
-      console.error('Sidelog Error', e.response.data);
-    } else if (e instanceof AxiosError) {
-      console.error('Sidelog Error', e.toJSON());
-    } else {
-      console.error('Sidelog Error', e);
+      return { success: true };
+    } catch (e) {
+      if (e instanceof AxiosError && e.response) {
+        console.error('Sidelog Error', e.response.data);
+      } else if (e instanceof AxiosError) {
+        console.error('Sidelog Error', e.toJSON());
+      } else {
+        console.error('Sidelog Error', e);
+      }
+
+      return { success: false };
     }
-
-    return { success: false };
   }
 }
 
@@ -67,17 +70,17 @@ const individualLogMethods = LOG_LEVELS.reduce((acc, level) => {
   }
 }, {}) as IndividualLogMethods;
 
-const setConfig = (newConfig: SidelogConfig) => {
-  if (!newConfig.sidelogUrl) {
+const setConfig = ({ sidelogUrl, clientId, logToConsole = false, logToApi = true }: SidelogConfig) => {
+  if (!sidelogUrl) {
     throw new Error('sidelogUrl is required');
   }
 
-  if (!newConfig.clientId) {
+  if (!clientId) {
     throw new Error('clientId is required');
   }
 
-  config = newConfig;
-}
+  config = { sidelogUrl, clientId, logToConsole, logToApi };
+};
 
 const updateDefaultMeta = (callback: (currentMeta: Record<string, unknown>) => Record<string, unknown>) => {
   defaultMeta = callback(defaultMeta);
